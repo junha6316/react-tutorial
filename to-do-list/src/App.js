@@ -1,24 +1,30 @@
-import Button  from "./Button";
-import {useState, useEffect} from "react";
-
+import {useState} from "react"
 function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => setValue(current => current +1)
-  const onChange = (event) => setKeyword(event.target.value)
-  const apiCall =()=>  console.log("call an api")
-  
-  useEffect(apiCall,[])
-  useEffect(()=>{
-    if(keyword !== "" && keyword.length >= 5){
-      console.log("search for", keyword)
+
+    const [toDo, setToDo] = useState("");
+    const [toDos, setToDos] = useState([]);
+    const onChange = (event) => setToDo(event.target.value)
+    const onSubmit = (event) => {
+      event.preventDefault();
+      if (toDo === ""){
+        return 
+      }
+
+      setToDo("")
+      setToDos(currentToDos => [...currentToDos, toDo])
     }
-  }, [keyword])
+  
   return (
-    <div className="App">
-    <input type="text" placeholder="Search here.." onChange={onChange}/>
-      <h1>{counter}</h1>
-      <button onClick={onClick}>click me</button>
+    <div>
+    <h1>My To Dos ({toDos.length})</h1>
+    <form onSubmit={onSubmit}>
+      <input type="Text" value={toDo} placeholder="할일을 적으세요" onChange={onChange} />
+      <button>submit</button>
+      </form>
+      <hr />
+      {toDos.map((toDo, idx ) => (
+        <li key={idx}>{toDo}</li>
+      ))}
     </div>
   );
 }
