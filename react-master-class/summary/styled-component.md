@@ -54,6 +54,3 @@ const RequiredInput = styled.input.attrs({required:true})`
         color: ${props=>props.theme.textColor};
     `
     ```
-
-
-   ```

@@ -15,9 +15,7 @@ const whiteTheme ={
 
 ReactDOM.render(
   <React.StrictMode>
-  <ThemeProvider theme={darkTheme}>
     <App />
-    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
