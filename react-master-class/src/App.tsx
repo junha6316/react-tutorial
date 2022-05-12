@@ -1,5 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-import Circle from './Circle';
+import React from 'react';
+import styled from 'styled-components';
 
 // const Title = styled.h1`
 //   color: ${(props) => props.theme.textColor}
@@ -60,11 +60,16 @@ import Circle from './Circle';
 // `
 
 function App() {
+  const Container = styled.div`
+    background-color: ${(props) => props.theme.bgColor};
+  `;
+  const H1 = styled.h1`
+    color: ${(props) => props.theme.textColor};
+  `;
   return (
-    <div>
-      <Circle bgColor={'teal'} borderColor={'black'} />
-      <Circle bgColor={'tomato'} />
-    </div>
+    <Container>
+      <H1 />
+    </Container>
   );
 }
 
