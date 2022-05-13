@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import {
   useRouteMatch,
   useLocation,
@@ -7,6 +7,7 @@ import {
   Route,
   Link,
 } from 'react-router-dom';
+import { fetchCoinDetail, fetchCoinPriceDetail } from '../apis';
 import {
   Container,
   Header,
@@ -18,7 +19,7 @@ import {
   Tab,
   Tabs,
 } from '../components';
-import { urls } from '../constants';
+
 import Chart from './Chart';
 import Price from './Price';
 import {
@@ -29,35 +30,28 @@ import {
 } from './type/CoinDetailResponse';
 
 function Coin() {
-  const [loading, setLoading] = useState(true);
   const { coinId } = useParams<CoinDetailParams>();
   const { state } = useLocation<RouteState>();
 
   const priceMatch = useRouteMatch('/:coinId/price');
   const chartMatch = useRouteMatch('/:coinId/chart');
 
-  const [coinDetail, setCoinDetail] = useState<ICoinDetail>();
-  const [coinPriceDetail, setCoinPriceDetail] = useState<ICoinPriceDetail>();
+  const { isLoading: infoLoading, data: infoData } = useQuery<ICoinDetail>(
+    ['info', coinId],
+    () => fetchCoinDetail(coinId),
+  );
+  const { isLoading: tickersLoading, data: tickersData } =
+    useQuery<ICoinPriceDetail>(['tickers', coinId], () =>
+      fetchCoinPriceDetail(coinId),
+    );
 
-  useEffect(() => {
-    (async () => {
-      const coinInfo: ICoinDetail = await (
-        await fetch(urls.coninDetail(coinId))
-      ).json();
-      const priceInfo: ICoinPriceDetail = await (
-        await fetch(urls.coinPriceDetail(coinId))
-      ).json();
+  const loading = infoLoading || tickersLoading;
 
-      setCoinDetail(coinInfo);
-      setCoinPriceDetail(priceInfo);
-      setLoading(false);
-    })();
-  }, [coinId]); // hook 성능을 위해 dependency에 추가
   return (
     <Container>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? 'Loading...' : coinDetail?.name}
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -67,30 +61,30 @@ function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{coinDetail?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
 
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${coinDetail?.symbol}</span>
+              <span>${infoData?.symbol}</span>
             </OverviewItem>
 
             <OverviewItem>
               <span>Open Source:</span>
-              <span>{coinDetail?.open_source ? 'Yes' : 'No'}</span>
+              <span>{infoData?.open_source ? 'Yes' : 'No'}</span>
             </OverviewItem>
           </Overview>
 
-          <Description>{coinDetail?.description}</Description>
+          <Description>{infoData?.description}</Description>
 
           <Overview>
             <OverviewItem>
               <span>Total Suply:</span>
-              <span>{coinPriceDetail?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{coinPriceDetail?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
