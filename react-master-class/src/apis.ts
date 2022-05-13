@@ -13,3 +13,11 @@ export function fetchCoinPriceDetail(coinId: string) {
     response.json(),
   );
 }
+
+export function fetchCoinHistory(coinId: string) {
+  const end = Math.floor(Date.now() / 1000);
+  const start = end - 3600 * 24 * 7 * 2;
+  return fetch(urls.priceHistory(coinId, start, end)).then((response) =>
+    response.json(),
+  );
+}

@@ -28,6 +28,8 @@ import {
   ICoinDetail,
   ICoinPriceDetail,
 } from './type/CoinDetailResponse';
+import { Helmet } from 'react-helmet';
+import GoBackBtn from './GoBackBtn';
 
 function Coin() {
   const { coinId } = useParams<CoinDetailParams>();
@@ -49,11 +51,17 @@ function Coin() {
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
       </Header>
+      <GoBackBtn />
       {loading ? (
         <Loader>Loading...</Loader>
       ) : (
@@ -102,7 +110,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/${coinId}/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
