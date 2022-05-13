@@ -49,3 +49,5 @@ table {
   border-spacing: 0;
 }
 ```
+
+- link tag 대신 anchor를 사용하면 페이지가 새로고침 된다.
