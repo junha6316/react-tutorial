@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
+import { fetchCoins } from '../apis';
 import {
   Container,
   Header,
@@ -10,30 +11,21 @@ import {
   Img,
 } from '../components';
 
-import { apis } from '../constants';
 import { ICoin } from './type';
 
 function Coins() {
-  const [coins, setCoins] = useState<ICoin[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    (async () => {
-      const response = await fetch(apis.coinList);
-      const json = await response.json();
-      setCoins(json.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []);
+  const { isLoading, data } = useQuery<ICoin[]>('allCoins', fetchCoins);
+
   return (
     <Container>
       <Header>
         <Title>코인</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading</Loader>
       ) : (
         <CoinsList>
-          {coins.map((coin) => {
+          {data?.slice(0, 100).map((coin) => {
             return (
               <Coin key={coin.id}>
                 <Link

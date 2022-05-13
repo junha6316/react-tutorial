@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
 } from '../components';
-import { apis } from '../constants';
+import { urls } from '../constants';
 import Chart from './Chart';
 import Price from './Price';
 import {
@@ -42,10 +42,10 @@ function Coin() {
   useEffect(() => {
     (async () => {
       const coinInfo: ICoinDetail = await (
-        await fetch(apis.coninDetail(coinId))
+        await fetch(urls.coninDetail(coinId))
       ).json();
       const priceInfo: ICoinPriceDetail = await (
-        await fetch(apis.coinPriceDetail(coinId))
+        await fetch(urls.coinPriceDetail(coinId))
       ).json();
 
       setCoinDetail(coinInfo);
