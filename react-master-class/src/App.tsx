@@ -1,75 +1,48 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-// const Title = styled.h1`
-//   color: ${(props) => props.theme.textColor}
-// `
-
-// const Wrapper = styled.div`
-//   display: flex;
-//   background-color:${props => props.theme.backgroundColor}
-// `
-// const animation = keyframes`
-//   0% {
-//     transform: rotate(0deg);
-//     border-radius:0px;
-//   }
-//   50%{
-//     transform: rotate(180deg);
-//     border-radius: 30px
-//   }
-//   100%{
-//     transform: rotate(360deg);
-//     border-radius: 50px
-//   }
-
-// `
-
-// const Emoji = styled.span`
-//   font-size:16px;
-// `
-
-// const Box = styled.div`
-//   background-color: ${props => props.bgColor};
-//   width: 100px;
-//   height: 100px;
-//   animation:${animation} 1s linear infinite;
-//   display:flex;
-//   justify-content:center;
-//   align-items:center;
-//   ${Emoji}{
-//     &:hover{
-//       font-size:50px;
-//     }
-//     &:active{
-//       opacity:0;
-//     }
-//   }
-// `
-
-// const Btn = styled.button`
-//   color: white;
-//   background-color:tomato;
-//   border: 0;
-//   border-radius:15px;
-
-// `
-
-// const Input = styled.input.attrs({required:true})`
-//   background-color: tomato;
-// `
-
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 function App() {
-  const Container = styled.div`
-    background-color: ${(props) => props.theme.bgColor};
-  `;
-  const H1 = styled.h1`
-    color: ${(props) => props.theme.textColor};
-  `;
+  const { register, handleSubmit, formState } = useForm();
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+  const onInvalid = (data: any) => {
+    console.log(data);
+  };
+  console.log(formState.errors);
   return (
-    <Container>
-      <H1 />
-    </Container>
+    <Form onSubmit={handleSubmit(onValid, onInvalid)}>
+      <input
+        {...register('email', { required: true, minLength: 10 })}
+        placeholder="email"
+      />
+      <input
+        {...register('firstName', { required: true })}
+        placeholder="firstName"
+      />
+      <input
+        {...register('lastName', { required: true })}
+        placeholder="lastName"
+      />
+      <input
+        {...register('address', { required: true })}
+        placeholder="address"
+      />
+      <input
+        {...register('username', { required: true })}
+        placeholder="username"
+      />
+      <input
+        {...register('password', { required: 'password required' })}
+        placeholder="password"
+      />
+      <button>Add on</button>
+    </Form>
   );
 }
 
