@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { useRecoilState, atom } from 'recoil';
 import styled from 'styled-components';
-import { IToDo, IForm } from '../index.d';
+import { IToDo, IForm, ToDoCategory } from '../type';
 import { toDoState } from '../atoms';
 
 const Form = styled.form`
@@ -13,19 +13,13 @@ const Form = styled.form`
 function CreateToDo() {
   const [toDo, setToDo] = useState('');
   const [toDos, setToDos] = useRecoilState<IToDo[]>(toDoState);
-  const {
-    register,
-    handleSubmit,
-    // formState: { errors },
-    // setError,
-  } = useForm<IForm>({});
+  const { register, handleSubmit } = useForm<IForm>({});
 
   const onValid = (data: IForm) => {
     setToDos((oldToDos: IToDo[]) => [
-      { id: oldToDos.length, text: data.toDo, category: 'TO_DO' },
+      { id: oldToDos.length, text: data.toDo, category: ToDoCategory.ToDo },
       ...oldToDos,
     ]);
-    setToDo('');
   };
   const onInvalid = () => {};
   return (
