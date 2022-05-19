@@ -16,6 +16,7 @@ function App(){
             value: 10,
             message: "too Short"
         }
+        pattern: "정규표현식"
     }
 
     const onValid =  (data: any) =>{ }
@@ -29,3 +30,5 @@ function App(){
 }
 
 ```
+
+- 리액트 커스텀한 훅들은 대부분 하나의 컴포넌트 내에 지나치게 많은 코드를 해결하기 위해 존재하는 것 같다.

@@ -2,25 +2,44 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
+
+interface IForm {
+  email: string;
+  firstName: string;
+  lastName: string;
+  address: string;
+  username: string;
+  password: string;
+}
+
 function App() {
-  const { register, handleSubmit, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>({
+    defaultValues: {
+      email: 'test@test.com',
+    },
+  });
   const onValid = (data: any) => {
     console.log(data);
   };
   const onInvalid = (data: any) => {
     console.log(data);
   };
-  console.log(formState.errors);
+
   return (
     <Form onSubmit={handleSubmit(onValid, onInvalid)}>
       <input
-        {...register('email', { required: true, minLength: 10 })}
+        {...register('email', { required: 'Email is Required', minLength: 10 })}
         placeholder="email"
       />
+      <span>{errors.email?.message}</span>
       <input
         {...register('firstName', { required: true })}
         placeholder="firstName"
@@ -41,7 +60,7 @@ function App() {
         {...register('password', { required: 'password required' })}
         placeholder="password"
       />
-      <button>Add on</button>
+      <button>Add</button>
     </Form>
   );
 }
