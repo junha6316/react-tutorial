@@ -16,7 +16,8 @@ function App(){
             value: 10,
             message: "too Short"
         }
-        pattern: "정규표현식"
+        pattern: "정규표현식",
+        validate: () =>true // custom validation function
     }
 
     const onValid =  (data: any) =>{ }

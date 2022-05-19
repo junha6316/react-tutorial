@@ -13,7 +13,9 @@ interface IForm {
   lastName: string;
   address: string;
   username: string;
-  password: string;
+  password1: string;
+  password2: string;
+  extraError?: string;
 }
 
 function App() {
@@ -21,13 +23,18 @@ function App() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>({
     defaultValues: {
       email: 'test@test.com',
     },
   });
-  const onValid = (data: any) => {
-    console.log(data);
+
+  const onValid = (data: IForm) => {
+    if (data.password1 !== data.password2) {
+      setError('password1', { message: 'passwords are not the same' });
+    }
+    setError('extraError', { message: 'Server Offline' });
   };
   const onInvalid = (data: any) => {
     console.log(data);
@@ -36,7 +43,11 @@ function App() {
   return (
     <Form onSubmit={handleSubmit(onValid, onInvalid)}>
       <input
-        {...register('email', { required: 'Email is Required', minLength: 10 })}
+        {...register('email', {
+          required: 'Email is Required',
+          minLength: 10,
+          validate: (value) => !value.includes('junha '),
+        })}
         placeholder="email"
       />
       <span>{errors.email?.message}</span>
@@ -57,10 +68,16 @@ function App() {
         placeholder="username"
       />
       <input
-        {...register('password', { required: 'password required' })}
+        {...register('password1', { required: 'password required' })}
         placeholder="password"
       />
+      <input
+        {...register('password2', { required: 'password required' })}
+        placeholder="password"
+      />
+      <span>{errors.password1?.message}</span>
       <button>Add</button>
+      <span>{errors.extraError?.message}</span>
     </Form>
   );
 }
