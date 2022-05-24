@@ -1,7 +1,14 @@
 import React from 'react';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { createGlobalStyle } from 'styled-components';
-import DraggableLi from './components/DraggableLi';
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from 'react-beautiful-dnd';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import styled, { createGlobalStyle } from 'styled-components';
+import { toDoItemsState } from './atoms';
+import DroppableBoard from './components/Board';
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -67,26 +74,73 @@ a {
 }
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+`;
+
 function App() {
-  const onDragEnd = () => {};
-  const toDos: string[] = ['first', 'second'];
+  const [toDos, setToDoItems] = useRecoilState(toDoItemsState);
+
+  const toDoCategories = Object.keys(toDos);
+
+  const onDragEnd = (info: DropResult) => {
+    const { destination, draggableId, source } = info;
+    if (destination?.droppableId === source.droppableId) {
+      setToDoItems((oldToDos) => {
+        const boardCopy = [...oldToDos[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination.index, 0, draggableId);
+        return {
+          ...oldToDos,
+          [source.droppableId]: boardCopy,
+        };
+      });
+    } else if (destination?.droppableId !== source.droppableId) {
+      if (destination) {
+        setToDoItems((oldToDos) => {
+          const sourceBoard = [...oldToDos[source.droppableId]];
+          const targetBoard = [...oldToDos[destination?.droppableId]];
+          sourceBoard.splice(source.index, 1);
+          targetBoard.splice(destination.index, 0, draggableId);
+          return {
+            ...oldToDos,
+            [source.droppableId]: sourceBoard,
+            [destination.droppableId]: targetBoard,
+          };
+        });
+      }
+    }
+  };
   return (
     <>
       <GlobalStyle />
       <DragDropContext onDragEnd={onDragEnd}>
-        <div>
-          <Droppable droppableId="one">
-            {(provided) => (
-              <ul ref={provided.innerRef} {...provided.droppableProps}>
-                {toDos.map((toDo, idx) => {
-                  return (
-                    <DraggableLi key={idx} index={idx} draggableId={toDo} />
-                  );
-                })}
-              </ul>
-            )}
-          </Droppable>
-        </div>
+        <Wrapper>
+          <Boards>
+            {toDoCategories.map((toDoCategory, idx) => {
+              return (
+                <DroppableBoard
+                  key={idx}
+                  toDos={toDos[toDoCategory]}
+                  boardId={toDoCategory}
+                />
+              );
+            })}
+          </Boards>
+        </Wrapper>
       </DragDropContext>
     </>
   );
