@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
+import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import DraggableCard from './DraggableCard';
 
@@ -35,21 +36,35 @@ const Title = styled.h1`
   font-weight: 600;
   font-size: 18px;
 `;
+
+const Form = styled.form`
+  width: 100%;
+`;
 interface IBoardProps {
   toDos: string[];
   boardId: string;
 }
 
+interface IForm {
+  toDo: string;
+}
+
 function DroppableBoard({ toDos, boardId }: IBoardProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const onClick = () => {
-    inputRef.current?.focus();
+  const { register, handleSubmit, setValue } = useForm<IForm>();
+
+  const onValid = ({ toDo }: IForm) => {
+    setValue('toDo', '');
   };
   return (
     <Wrapper>
       <Title>{boardId}</Title>
-      <input ref={inputRef} placeholder="grab em" />
-      <button onClick={onClick}>Click me</button>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input
+          {...register('toDo', { required: true })}
+          type="text"
+          placeholder={`Add task on ${boardId}`}
+        />
+      </Form>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <Area
