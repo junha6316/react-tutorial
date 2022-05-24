@@ -27,3 +27,13 @@ styled.div < { test: boolean } > ``;
 ```css
  transition: background-color 0.5s ease-in-out:
 ```
+
+- reference: grap html element using JS
+  HTML 요소를 가져올 수 있게 해줌
+
+```javascript
+const inputRef = useRef<HTMLVideoElement>(null);
+
+// inputRef.current?.focus()
+<input ref={inputRef}>
+```

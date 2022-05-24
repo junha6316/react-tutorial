@@ -4,7 +4,7 @@
 
 ```
 npx create-react-app my-app-name —template typescript
-npm i --save react react-dom typescript
+npm i --save react react-dom typescript styled-components
 npm i --save-dev @types/react @types/react-dom @types/node
 npm i --save-dev @types/styled-components
 ```
