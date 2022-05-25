@@ -17,15 +17,19 @@ export const hourSelector = selector<number>({
   },
 });
 
+export interface ITodo {
+  id: number;
+  text: string;
+}
 interface IToDoState {
-  [key: string]: string[];
+  [key: string]: ITodo[];
 }
 
 export const toDoItemsState = atom<IToDoState>({
   key: 'toDoItems',
   default: {
-    toDo: ['first', 'second', 'third'],
-    doing: ['fourth', 'fifth'],
-    done: ['sixth', 'senventh', 'eighth'],
+    toDo: [{id:1, text:'test'}],
+    doing: [],
+    done: [],
   },
 });
