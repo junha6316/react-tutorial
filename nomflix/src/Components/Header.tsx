@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useAnimation, useViewportScroll } from 'framer-motion';
 import { Link, useRouteMatch } from 'react-router-dom';
-import React, { ButtonHTMLAttributes, useState } from 'react';
+import React, { ButtonHTMLAttributes, useEffect, useState } from 'react';
 
-const Nav = styled.nav`
+const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -86,17 +86,46 @@ const Input = styled(motion.input)`
   position: absolute;
   left: -150px;
 `;
+
+const navVariants = {
+  top: {
+    backgroundColor: 'rgb(0, 0, 0, 0)',
+  },
+  scroll: {
+    backgroundColor: 'rgb(0, 0, 0, 1)',
+  },
+};
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useRouteMatch('/');
   const tvMatch = useRouteMatch('/tv');
+  const inputAnimation = useAnimation();
+  const navAnimation = useAnimation();
+
+  const { scrollY } = useViewportScroll();
 
   const openSearch = () => {
+    if (searchOpen) {
+      inputAnimation.start('top');
+    } else {
+      // trigger the open animation
+      inputAnimation.start('scroll');
+    }
     setSearchOpen((prev) => !prev);
   };
 
+  useEffect(() => {
+    scrollY.onChange(() => {
+      if (scrollY.get() > 80) {
+        navAnimation.start({ backgroundColor: 'rgb(0,0,0,1)' });
+      } else {
+        navAnimation.start({ backgroundColor: '' });
+      }
+    });
+  }, [scrollY, navAnimation]);
+
   return (
-    <Nav>
+    <Nav variants={navVariants} animate={navAnimation} initial="top">
       <Col>
         <Logo
           variants={logoVariants}
@@ -148,7 +177,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
-            animate={{ scaleX: searchOpen ? 1 : 0 }}
+            animate={inputAnimation}
             placeholder="검색어를 입력해주세요. 이사람아 "
           />
         </Search>
