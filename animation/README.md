@@ -63,3 +63,7 @@ svg와 Path를 사용한 animation에 대해 배움
 - 7.11 AnimatePresence
   reactJS 없이지는 component를 animate
   animatePresence를 하기 위해선 컴포넌트가 visible 해야함
+
+- 7.14 You need to watch this
+  layoutId를 통해 두 component를 묶어주면
+  layout이 변할 때 자동으로 애니메이션이 입혀짐
