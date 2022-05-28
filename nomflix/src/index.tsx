@@ -4,12 +4,12 @@ import { GlobalStyle } from './globalStyle';
 import App from './App';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
-import { defaultTheme } from './theme';
+import { theme } from './theme';
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <ThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={theme}>
         <GlobalStyle />
         <App />
       </ThemeProvider>
