@@ -48,54 +48,62 @@ const Svg = styled.svg`
 
 function App() {
   const [visible, setVisible] = useState(1);
+  const [back, setBack] = useState(false);
 
-  const nextPlease = () => setVisible((prev) => (prev === 10 ? 1 : prev + 1));
-  const prevPlease = () => setVisible((prev) => (prev === 1 ? 10 : prev - 1));
+  const nextPlease = () => {
+    setBack(true);
+    setVisible((prev) => (prev === 10 ? 1 : prev + 1));
+  };
+  const prevPlease = () => {
+    setBack(false);
+    setVisible((prev) => (prev === 1 ? 10 : prev - 1));
+  };
 
   const sliderVariants = {
-    invisible: {
-      x: 500,
-      opacity: 0,
-      scale: 0,
+    entry: (back: boolean) => {
+      return {
+        x: back ? -500 : 500,
+        opacity: 0,
+        scale: 0,
+      };
     },
-    visible: {
+    center: {
       x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        duration: '1',
+        duration: '0.3',
       },
     },
-    end: {
-      x: -500,
-      opacity: 0,
-      scale: 0,
-      rotateX: 180,
-      transition: {
-        duration: '1',
-      },
+    end: (back: boolean) => {
+      return {
+        x: back ? 500 : -500,
+        opacity: 0,
+        scale: 0,
+        rotateX: 180,
+        transition: {
+          duration: '0.3',
+        },
+      };
     },
   };
-
+  // exitBeforeEnter 하나의 애니메이션 종료후 동작
   return (
     <Wrapper>
-      <AnimatePresence>
-        <button onClick={prevPlease}></button>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
-          i === visible ? (
-            <Box
-              variants={sliderVariants}
-              initial="invisible"
-              animate="visible"
-              exit="end"
-              key={i}
-            >
-              {i}
-            </Box>
-          ) : null,
-        )}
-        <button onClick={nextPlease}></button>
+      <AnimatePresence exitBeforeEnter custom={back}>
+        <Box
+          custom={back}
+          variants={sliderVariants}
+          initial="entry"
+          animate="center"
+          exit="end"
+          key={visible}
+        >
+          {visible}
+        </Box>
       </AnimatePresence>
+      <button onClick={prevPlease}>Prev</button>
+      <button onClick={nextPlease}>Next</button>
     </Wrapper>
   );
 }
