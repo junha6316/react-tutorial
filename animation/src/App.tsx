@@ -15,53 +15,18 @@ const Wrapper = styled(motion.div)`
 `;
 
 const Box = styled(motion.div)`
-  width: 200px;
+  width: 300px;
   height: 200px;
-  background-color: purple;
+  display; flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center; 
+  top: 100px;
+  background-color: white;
   border-radius: 10px;
+  font-size:28px;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
-
-const Circle = styled(motion.div)`
-  width: 70px;
-  height: 70px;
-  border-radius: 50px;
-  background-color: white;
-  margin: 15px 15px;
-`;
-const myVars = {
-  start: { scale: 0 },
-  end: { scale: 1, rotateZ: 360, transition: { type: 'spring' } },
-};
-
-// const boxVariants = {
-//   start: {
-//     opacity: 0,
-//     scale: 0.5,
-//   },
-//   end: {
-//     opacity: 1,
-//     scale: 1,
-//     transition: {
-//       type: 'spring',
-//       duration: 0.5,
-//       bounce: 0.5,
-//       delayChildren: 0.5,
-//       staggerChildren: 0.2,
-//     },
-//   },
-// };
-
-const CircleVariants = {
-  start: {
-    opacity: 0,
-    y: 10,
-  },
-  end: {
-    opacity: 1,
-    y: 0,
-  },
-};
 
 const BiggerBox = styled.div`
   background-color: white;
@@ -82,41 +47,54 @@ const Svg = styled.svg`
 `;
 
 function App() {
-  const [isShowing, setIsShowing] = useState(true);
+  const [visible, setVisible] = useState(1);
 
-  const boxVariants = {
-    initial: {
+  const nextPlease = () => setVisible((prev) => (prev === 10 ? 1 : prev + 1));
+  const prevPlease = () => setVisible((prev) => (prev === 1 ? 10 : prev - 1));
+
+  const sliderVariants = {
+    invisible: {
+      x: 500,
       opacity: 0,
       scale: 0,
     },
     visible: {
+      x: 0,
       opacity: 1,
       scale: 1,
-      rotateZ: 360,
+      transition: {
+        duration: '1',
+      },
     },
-    leaving: {
+    end: {
+      x: -500,
       opacity: 0,
       scale: 0,
-      y: 20,
+      rotateX: 180,
+      transition: {
+        duration: '1',
+      },
     },
-  };
-
-  const onClick = (event: React.FormEvent<HTMLButtonElement>) => {
-    setIsShowing((current) => !current);
   };
 
   return (
     <Wrapper>
-      <button onClick={onClick}>click me</button>
       <AnimatePresence>
-        {isShowing ? (
-          <Box
-            variants={boxVariants}
-            initial="inital"
-            animate="visible"
-            exit="leaving"
-          />
-        ) : null}
+        <button onClick={prevPlease}></button>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
+          i === visible ? (
+            <Box
+              variants={sliderVariants}
+              initial="invisible"
+              animate="visible"
+              exit="end"
+              key={i}
+            >
+              {i}
+            </Box>
+          ) : null,
+        )}
+        <button onClick={nextPlease}></button>
       </AnimatePresence>
     </Wrapper>
   );
