@@ -46,19 +46,6 @@ const Item = styled.li`
   }
 `;
 
-const logoVariants = {
-  nomal: {
-    fillOpacity: 1,
-  },
-  active: {
-    fillOpacity: [0, 1, 0],
-
-    transition: {
-      repeat: Infinity,
-    },
-  },
-};
-
 const Circle = styled(motion.span)`
   position: absolute;
   width: 5px;
@@ -93,6 +80,19 @@ const navVariants = {
   },
   scroll: {
     backgroundColor: 'rgb(0, 0, 0, 1)',
+  },
+};
+
+const logoVariants = {
+  nomal: {
+    fillOpacity: 1,
+  },
+  active: {
+    fillOpacity: [0, 1, 0],
+
+    transition: {
+      repeat: Infinity,
+    },
   },
 };
 function Header() {

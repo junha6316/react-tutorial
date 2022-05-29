@@ -54,8 +54,8 @@ table {
 }
 body {
   font-family: 'Source Sans Pro', sans-serif;
-  
-  color:black
+  background-color: ${(props) => props.theme.black.veryDark};
+  color:${(props) => props.theme.white.darker}
 }
 a {
   text-decoration:none;
